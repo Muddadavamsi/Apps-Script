@@ -1,0 +1,24 @@
+function copyDataToMultipleSheets() {
+  var sourceSheet = SpreadsheetApp.openById("source-sheet-id").getSheetByName("Sheet1");
+  var destinationSheetIds = ["destination-sheet-id-1", "destination-sheet-id-2", ...]; // Replace with the IDs of the destination sheets
+  
+  var filterColumn = 1; // The column number to filter the data
+  var filterValue = "Filter Value"; // The value to filter by
+  
+  var sourceData = sourceSheet.getDataRange().getValues();
+  
+  for (var i = 0; i < destinationSheetIds.length; i++) {
+    var destinationSheet = SpreadsheetApp.openById(destinationSheetIds[i]).getSheetByName("Sheet1");
+    var destinationData = [];
+    
+    for (var row = 0; row < sourceData.length; row++) {
+      if (sourceData[row][filterColumn - 1] === filterValue) { // -1 to adjust for 0-based indexing
+        destinationData.push(sourceData[row]);
+      }
+    }
+    
+    if (destinationData.length > 0) {
+      destinationSheet.getRange(1, 1, destinationData.length, destinationData[0].length).setValues(destinationData);
+    }
+  }
+}
